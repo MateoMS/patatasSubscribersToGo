@@ -1,7 +1,20 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-const routes: Routes = [];
+//Components
+import { AccountComponent } from './componets/account/account.component';
+import { SubscribersListComponent } from './componets/subscribers/subscribers-list/subscribers-list.component';
+
+// Guard
+import { Guard } from './guard/guard';
+
+const routes: Routes = [
+  { path: 'login', component: AccountComponent },
+  { path: 'subscribersList',
+    canActivate: [ Guard ],
+    component: SubscribersListComponent },
+  { path: '**', pathMatch: 'full', redirectTo: 'login' }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
