@@ -1,1 +1,33 @@
-<p>subscribers-list works!</p>
+
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Area</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let subscriber of subscribersList.Data">
+      <tr>
+        <th scope="row"> {{ subscriber.Id }} </th>
+        <td>{{ subscriber.Name }}</td>
+        <td>{{ subscriber.Email }}</td>
+        <td>{{ subscriber.Area }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="container row">
+  <div class="col-md-4">
+    <button type="button" class="btn btn-primary" (click)="addSubscribers()">Ingresar</button>
+  </div>
+  <div class="col-md-4">
+    <button type="button" class="btn btn-secondary" (click)="updateSubscribers(7949)">Actualizar</button>
+  </div>
+  <div class="col-md-4">
+    <button type="button" class="btn btn-danger" (click)="deleteSubscribers(7949)" disabled>Borrar</button>
+  </div>
+</div>

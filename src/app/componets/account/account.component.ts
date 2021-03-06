@@ -29,8 +29,6 @@ export class AccountComponent implements OnInit {
     }
 
     this.accountService.login( this.user ).subscribe( resp => {
-             console.log('Entro al subcribe');
-             console.log(resp);
              this.router.navigateByUrl('/subscribersList');
            } );
   }

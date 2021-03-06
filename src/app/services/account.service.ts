@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 export class AccountService {
 
   private url = "https://lab.arkbox.co/api";
-  private token: string;
+  public jwttoken: string;
 
   constructor( private http: HttpClient) {
     this.readToken();
@@ -20,15 +20,12 @@ export class AccountService {
   // Se genera el token para acceder a la cuenta
   login( user: AccountModel ) {
 
-    console.log(user);
-
     return this.http.post(
       `${ this.url }/account/login`,
       user
     ).pipe( map (
         data => {
-          console.log( 'data' );
-          this.saveToken(data['Token'])
+          this.saveToken(data['Token']);
           return data;
         }
     ));
@@ -38,7 +35,7 @@ export class AccountService {
   // Guarda el token en el localStorage
   private saveToken( idToken: string ) {
 
-    this.token = idToken;
+    this.jwttoken = idToken;
     localStorage.setItem('token', idToken);
 
     let today = new Date();
@@ -60,19 +57,19 @@ export class AccountService {
   readToken() {
 
     if ( localStorage.getItem('token') ){
-      this.token = localStorage.getItem('token');
+      this.jwttoken = localStorage.getItem('token');
     }
     else {
-      this.token = '';
+      this.jwttoken = '';
     }
 
-    return this.token;
+    return this.jwttoken;
 
   }
 
   isAuthenticated(): boolean {
 
-    if ( this.token.length < 2 ) {
+    if ( this.jwttoken.length < 2 ) {
       return false;
     }
 
