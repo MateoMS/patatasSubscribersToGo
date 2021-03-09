@@ -18,22 +18,24 @@ export class AccountComponent implements OnInit {
   constructor( private accountService: AccountService, private router: Router ) { }
 
   ngOnInit(): void {
+    // si hay un Token y esta autenticado te regresara a la pagina principal
     if ( localStorage.getItem('token') && this.accountService.isAuthenticated() ){
       this.router.navigateByUrl('/subscribersList');
     }
   }
 
+  // el proceso del login
   login( form: NgForm ) {
 
     if( form.invalid ){
       return;
     }
 
+    // hace el login, en caso de error le anuncia
     this.accountService.login( this.user ).subscribe( resp => {
              this.router.navigateByUrl('/subscribersList');
            },
          error => {
-           console.log(error.message);
            Swal.fire({
             icon: 'error',
             title: 'Acceso denegado!!!',

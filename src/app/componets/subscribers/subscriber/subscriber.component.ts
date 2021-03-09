@@ -34,9 +34,10 @@ export class SubscriberComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const { id } = this.activatedRoute.snapshot.params;
-    this.id = id;
-    if ( id === undefined ) {
+    // se obtiene el id con el params
+    this.id = this.activatedRoute.snapshot.params.id;
+    // si no se encuentra el id, se esta creando un suscriptor, en caso contrario se esta actualizando uno
+    if ( this.id === undefined ) {
       this.isNewSubscriber = true;
     }
     else {
@@ -45,12 +46,15 @@ export class SubscriberComponent implements OnInit {
 
   }
 
-  addTopics(thopic: any) {
-    this.topics.push(thopic.value);
+  // Añadira los topicos para luego utilizarlos
+  // addTopics(thopic: any) {
+  //   this.topics.push(thopic.value);
+  //
+  //   console.log(this.topics);
+  // }
 
-    console.log(this.topics);
-  }
-
+  // Obtiene el nombre del país y el número de teléfono, los guarda y luego los
+  // rescatara en la función donde se añadiran
   getCountryName(countryCode: string) {
     const country: Country | undefined = this.countries.find((c: Country) => c.code === countryCode);
     if (!country) {
@@ -77,23 +81,32 @@ export class SubscriberComponent implements OnInit {
     );
 
   }
+  // ******************************************
+  // ******** Zona de los botones *************
+  // ******************************************
 
+  // Botón de retorno a la lista
   returnToList() {
     this.router.navigateByUrl('/subscribersList');
   }
 
-  updateSubscriber( formSubscriber ) {
+  // El submit con NgForm por medio de template
+  updateSubscriber( formSubscriber: NgForm ) {
     formSubscriber.value['Topics'] = [];
 
+    // Se recupera el codigo de telefono del pais y el nombre del pais segun lo que eligieran el select
+    // si no se selecciono ningún país se saltara este paso
     if ( this.countryName!==undefined && this.countryPhone!==undefined ) {
       formSubscriber.value['CountryName'] = this.countryName;
-      formSubscriber.value['CountryPhone'] = this.countryPhone;
+      formSubscriber.value['PhoneCode'] = this.countryPhone;
     }
+    // el subscriber era porque me estaba enredando con los datos
     this.subscriber = formSubscriber.value;
     if ( formSubscriber.valid && this.subscriber['Name']!==undefined && ( this.subscriber['Email']!==undefined || (this.subscriber['CountryCode']!==undefined && this.subscriber['PhoneNumber']!==undefined) ) ) {
-      console.log( this.subscriber );
+
+      // si el suscriptor no tiene un id entonces se nuevo y se esta creando, en caso contrario se actualizara
       if (this.isNewSubscriber) {
-        this.subscribersService.addSubscribers(this.subscriber).subscribe( data => console.log(data) );
+        this.subscribersService.addSubscribers(this.subscriber).subscribe( data => this.confirmationSwal() );
       }
       else {
         Swal.fire({
@@ -103,13 +116,14 @@ export class SubscriberComponent implements OnInit {
         }).then((result) => {
           if (result.isConfirmed) {
             Swal.fire('Cambios guardados!', '', 'success')
-            this.subscribersService.updateSubscriber(this.id, this.subscriber).subscribe( data => console.log(data) );
+            this.subscribersService.updateSubscriber(this.id, this.subscriber).subscribe( );
           }
         });
 
       }
     }
     else {
+      // En caso de que la informacion primordial no sea suministrada se avisara del error
       Swal.fire({
        icon: 'warning',
        title: 'Formulario incompleto!!!',
@@ -118,20 +132,34 @@ export class SubscriberComponent implements OnInit {
     }
   }
 
+  // Botón de eliminar con su respectiva confirmación
   deleteSubscription() {
     Swal.fire({
       title: '¿Eliminar subscriptor?',
       icon: 'warning',
-      showDenyButton: true,
+      text: 'No se podra deshacer',
+      showCancelButton: true,
       confirmButtonText: 'Eliminar'
     }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        Swal.fire('Se eliminó el subscriptor', '', 'info');
-        this.subscribersService.deleteSubscriber(this.id).subscribe( data => console.log(data) );
+        Swal.fire('Se eliminó el subscriptor', '', 'success');
+        this.subscribersService.deleteSubscriber(this.id).subscribe( /*data => console.log(data)*/ );
         this.router.navigateByUrl(`subscribersLists`);
       }
     });
+  }
+
+
+  // Un sweetalert para cuando se añada un nuevo subscriptor confirme en la parte superior y luego redirecciona a la lista
+  confirmationSwal(){
+    Swal.fire({
+      position: 'top-end',
+      icon: 'success',
+      title: 'Se guardo con exitó',
+      showConfirmButton: false,
+      timer: 2000
+    })
+    this.router.navigateByUrl(`subscribersLists`);
   }
 
 }

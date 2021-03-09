@@ -15,7 +15,6 @@ import { AppComponent } from './app.component';
 import { AccountComponent } from './componets/account/account.component';
 import { NavbarComponent } from './componets/navbar/navbar.component';
 import { SubscribersListComponent } from './componets/subscribers/subscribers-list/subscribers-list.component';
-import { SubscribersUpdateComponent } from './componets/subscribers/subscribers-update/subscribers-update.component';
 import { SubscriberComponent } from './componets/subscribers/subscriber/subscriber.component';
 
 
@@ -25,7 +24,6 @@ import { SubscriberComponent } from './componets/subscribers/subscriber/subscrib
     AccountComponent,
     NavbarComponent,
     SubscribersListComponent,
-    SubscribersUpdateComponent,
     SubscriberComponent
   ],
   imports: [

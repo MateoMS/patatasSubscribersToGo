@@ -2,3 +2,13 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-sort-header-content {
+    font-size: 15px;
+    padding-bottom: 20px;
+    font-weight: bold;
+}
+
+.mat-sort-header-arrow, [dir=rtl] .mat-sort-header-position-before .mat-sort-header-arrow {
+    padding-bottom: 30px;
+}

@@ -23,30 +23,27 @@ export class SubscribersListComponent implements OnInit {
   displayedColumns: string[] = ['Id', 'Name', 'Email', 'Area', 'Options'];
   dataSource: MatTableDataSource<SubscribersListModel>;
 
+  constructor( private subscribersService: SubscribersService,
+    private router: Router ) { }
+
+  ngOnInit(): void {
+    this.getSubscribersList();
+  }
+
+  //Funciones necesarias para el mat table
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-
+  // se rescata la informacion que se mostrara la tabla
   dataS(data) {
-    console.log(data);
 
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    console.log(this.dataSource);
+
   }
 
-  constructor( private subscribersService: SubscribersService,
-               private router: Router ) { }
-
-
-  ngOnInit(): void {
-
-    this.getSubscribersList();
-
-    console.log(this.subscribersList);
-  }
-
+  // se obtiene la informacion de la base de datos
   getSubscribersList() {
 
     this.subscribersService.getSubscribersList().subscribe (
@@ -54,15 +51,17 @@ export class SubscribersListComponent implements OnInit {
           this.subscribersList.Count = data['Count'];
           this.subscribersList.Data = data['Data'];
           this.dataS(this.subscribersList.Data);
-          // console.log( data );
           return data;
         }
     );
 
   }
 
+  // se redirecciona a la pagina de actualizar subscriptor
   updateSubscribers( id: number ) {
+
     this.router.navigateByUrl(`subscriber/${ id }`);
+
   }
 
 

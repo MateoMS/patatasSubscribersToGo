@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
-import { map } from 'rxjs/operators';
 import { AccountService } from './account.service';
 import { Datum } from '../models/subscribersList.model';
 
@@ -17,6 +16,7 @@ export class SubscribersService {
     this.jwttoken = accountService.jwttoken;
   }
 
+  // maneja el token y permite reutilizarlo
   header() {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -26,6 +26,7 @@ export class SubscribersService {
     return headers;
   }
 
+  // Obtiene la lista
   getSubscribersList() {
 
     return this.http.get(
@@ -35,6 +36,7 @@ export class SubscribersService {
 
   }
 
+  // Obtiene informacion de un unico suscriptor
   getSubscriber( id: number ) {
 
     return this.http.get(
@@ -44,6 +46,7 @@ export class SubscribersService {
 
   }
 
+  // Actualiza la informacion del suscriptor actual
   updateSubscriber( id: number, subscriptor: Datum ) {
 
     subscriptor['id'] = id;
@@ -56,35 +59,14 @@ export class SubscribersService {
 
   }
 
+  // Añade la informacion de un nuevo suscriptor
   addSubscribers( subscriptor: Datum ) {
-    //
-    // let body = JSON.stringify({
-    //   "Subscribers": [
-    //     {
-    //       "Name": "Suscriptor 4",
-    //       "Email": "s4@tekus.co",
-    //       "CountryCode": "CO",
-    //       "CountryName": "Colombia",
-    //       "PhoneCode": "+57",
-    //       "PhoneNumber": 3012824768,
-    //       "JobTitle": "",
-    //       "Area": "",
-    //       "Topics": []
-    //     }
-    //   ]
-    // });
-    //
-    // console.log(body);
-
-    // console.log(subscriptor);
 
     const   body = JSON.stringify({
       "Subscribers": [
           subscriptor
       ]
     });
-
-    console.log(body);
 
     return this.http.post(
       `${ this.url }/subscribers`,
@@ -94,6 +76,7 @@ export class SubscribersService {
 
   }
 
+  // Chasquea los dedos como Thanos y elimina al suscriptor
   deleteSubscriber( id: number ) {
 
     return this.http.delete(
