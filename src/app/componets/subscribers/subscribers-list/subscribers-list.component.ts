@@ -1,10 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 //Services
 import { SubscribersService } from 'src/app/services/subscribers.service';
 
 //Models
-import { SubscribersListModel, Datum } from 'src/app/models/subscribersList.model';
+import { SubscribersListModel } from 'src/app/models/subscribersList.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-subscribers-list',
@@ -15,7 +20,24 @@ export class SubscribersListComponent implements OnInit {
 
   subscribersList: SubscribersListModel = new SubscribersListModel;
 
-  constructor( private subscribersService: SubscribersService ) { }
+  displayedColumns: string[] = ['Id', 'Name', 'Email', 'Area', 'Options'];
+  dataSource: MatTableDataSource<SubscribersListModel>;
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+
+  dataS(data) {
+    console.log(data);
+
+    this.dataSource = new MatTableDataSource(data);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    console.log(this.dataSource);
+  }
+
+  constructor( private subscribersService: SubscribersService,
+               private router: Router ) { }
 
 
   ngOnInit(): void {
@@ -31,6 +53,7 @@ export class SubscribersListComponent implements OnInit {
         data => {
           this.subscribersList.Count = data['Count'];
           this.subscribersList.Data = data['Data'];
+          this.dataS(this.subscribersList.Data);
           // console.log( data );
           return data;
         }
@@ -38,19 +61,11 @@ export class SubscribersListComponent implements OnInit {
 
   }
 
-  addSubscribers() {
-    console.log('Presiono añadir');
-    this.subscribersService.addSubscribers().subscribe( data => console.log(data) );
-  }
-
   updateSubscribers( id: number ) {
-    console.log('Presiono actualizar');
-    this.subscribersService.updateSubscriber(id).subscribe( data => console.log(data) );
+    this.router.navigateByUrl(`subscriber/${ id }`);
   }
 
-  deleteSubscribers( id: number ) {
-    console.log('Presiono borrar');
-    this.subscribersService.deleteSubscriber(id).subscribe( data => console.log(data) );
-  }
+
+
 
 }

@@ -11,7 +11,7 @@ export class Guard implements CanActivate {
   constructor( private service: AccountService, private router: Router ) { }
 
   canActivate(): boolean {
-    if (this.service.isAuthenticated()){
+    if (this.service.isAuthenticated()['value']){
       return true;
     }
     else {

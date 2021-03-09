@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { AccountModel } from '../models/account.model';
 
 import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,8 @@ export class AccountService {
 
   private url = "https://lab.arkbox.co/api";
   public jwttoken: string;
+
+  private loggedIn = new BehaviorSubject<boolean>(false);
 
   constructor( private http: HttpClient) {
     this.readToken();
@@ -51,6 +54,8 @@ export class AccountService {
     localStorage.removeItem('token');
     localStorage.removeItem('expires');
 
+    this.loggedIn.next(false);
+
   }
 
   // Leer si existe un token de autorización
@@ -67,10 +72,11 @@ export class AccountService {
 
   }
 
-  isAuthenticated(): boolean {
+  isAuthenticated(): Observable<boolean> {
 
     if ( this.jwttoken.length < 2 ) {
-      return false;
+      this.loggedIn.next(false);
+      return this.loggedIn;
     }
 
     const expires = Number(localStorage.getItem('expires'));
@@ -78,11 +84,13 @@ export class AccountService {
     expiresDate.setTime(expires);
 
     if ( expiresDate > new Date() ) {
-      return true;
+      this.loggedIn.next(true);
     }
     else {
-      return false;
+      this.loggedIn.next(false);
     }
+
+    return this.loggedIn;
 
   }
 

@@ -13,8 +13,6 @@ export class SubscribersService {
   private url = "https://lab.arkbox.co/api";
   private jwttoken: string;
 
-  private dataSubscriber = Datum;
-
   constructor( private http: HttpClient, private accountService: AccountService) {
     this.jwttoken = accountService.jwttoken;
   }
@@ -46,46 +44,47 @@ export class SubscribersService {
 
   }
 
-  updateSubscriber( id: number  ) {
+  updateSubscriber( id: number, subscriptor: Datum ) {
 
-    const body = JSON.stringify(
-      {
-        "Id": 7949,
-        "Name": "Kevin el peli camaleon",
-        "Email": "kevin.piedrahita@tekus.co",
-        "CountryCode": "CO",
-        "PhoneNumber": "6043035",
-        "Area": "Desarrollo",
-        "JobTitle": "Frond",
-        "Topics": []
-      }
-    );
+    subscriptor['id'] = id;
 
     return this.http.put(
       `${ this.url }/subscribers/${ id }`,
-      body,
+      subscriptor,
       { headers: this.header() }
     );
 
   }
 
-  addSubscribers() {
+  addSubscribers( subscriptor: Datum ) {
+    //
+    // let body = JSON.stringify({
+    //   "Subscribers": [
+    //     {
+    //       "Name": "Suscriptor 4",
+    //       "Email": "s4@tekus.co",
+    //       "CountryCode": "CO",
+    //       "CountryName": "Colombia",
+    //       "PhoneCode": "+57",
+    //       "PhoneNumber": 3012824768,
+    //       "JobTitle": "",
+    //       "Area": "",
+    //       "Topics": []
+    //     }
+    //   ]
+    // });
+    //
+    // console.log(body);
 
-    const body = JSON.stringify({
+    // console.log(subscriptor);
+
+    const   body = JSON.stringify({
       "Subscribers": [
-        {
-          "Name": "Suscriptor 4",
-          "Email": "s4@tekus.co",
-          "CountryCode": "CO",
-          "CountryName": "Colombia",
-          "PhoneCode": "+57",
-          "PhoneNumber": 3012824768,
-          "JobTitle": "",
-          "Area": "",
-          "Topics": []
-        }
+          subscriptor
       ]
     });
+
+    console.log(body);
 
     return this.http.post(
       `${ this.url }/subscribers`,
@@ -96,8 +95,6 @@ export class SubscribersService {
   }
 
   deleteSubscriber( id: number ) {
-
-    console.log( id );
 
     return this.http.delete(
       `${ this.url }/subscribers/${ id }`,

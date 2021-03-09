@@ -19,6 +19,10 @@ const routes: Routes = [
     canActivate: [ Guard ],
     component: SubscriberComponent
   },
+  { path: 'subscriber',
+    canActivate: [ Guard ],
+    component: SubscriberComponent
+  },
   { path: '**', pathMatch: 'full', redirectTo: 'login' }
 ];
 

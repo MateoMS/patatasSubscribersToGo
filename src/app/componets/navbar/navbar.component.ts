@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { AccountService } from 'src/app/services/account.service';
 
@@ -12,7 +13,7 @@ export class NavbarComponent implements OnInit {
 
   constructor( private accountService: AccountService, private router: Router ) { }
 
-  authenticated = false;
+  authenticated : Observable<boolean>;
 
   ngOnInit(): void {
     this.authenticated = this.accountService.isAuthenticated();

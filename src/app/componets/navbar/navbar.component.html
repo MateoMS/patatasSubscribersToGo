@@ -1,22 +1,33 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <span class="navbar-brand mb-0 h1">PatatasToGo</span>
 
-  <div class="collapse navbar-collapse" id="navbar">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" *ngIf="authenticated | async">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent" *ngIf="authenticated | async">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/account">Login</a>
+
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/subscribersList">Subscriptores</a>
       </li>
+
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/subscriber">Añadir</a>
+      </li>
+
     </ul>
+
+    <span class="navbar-text">
+
+      <ng-container>
+        <button class="btn btn-outline-danger"
+                (click)="logout()">
+          Logout
+        </button>
+      </ng-container>
+
+    </span>
   </div>
 
-  <span class="navbar-text">
-
-    <ng-container *ngIf="authenticated">
-      <button class="btn btn-outline-danger"
-              (click)="logout()">
-        Logout
-      </button>
-    </ng-container>
-
-  </span>
 </nav>

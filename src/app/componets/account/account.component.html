@@ -1,33 +1,42 @@
-<div class="container">
+<div class="container mt-5">
   <form (ngSubmit)="login( f )"
-        #f = "ngForm">
+        #f = "ngForm"
+        class="align-items-center">
 
-    <div class="row">
-      <div class="col-md-6">
-        <h3>Usuario:</h3>
-      </div>
-      <div class="col-md-6">
-        <input type="text"
-               name="userName"
-               placeholder="usuario"
-               [(ngModel)]="user.UserName">
-      </div>
-      <div class="col-md-6">
-        <h3>Contraseña:</h3>
-      </div>
-      <div class="col-md-6">
-        <input type="password"
-               name="password"
-               placeholder="contraseña"
-               [(ngModel)]="user.Password">
+      <div class="form-group row">
+        <label class="col-2 col-form-label">Usuario:</label>
+        <div class="col">
+          <input class="form-control"
+                 type="text"
+                 name="userName"
+                 placeholder="usuario"
+                 [(ngModel)]="user.UserName">
+        </div>
       </div>
 
-      <div class="col-md-12">
-        <button class="btn btn-primary" type="submit">
-            Ingresar
+      <div class="form-group row">
+        <label class="col-2 col-form-label">Contraseña:</label>
+        <div class="col">
+          <input class="form-control"
+                 type="password"
+                 name="password"
+                 placeholder="contraseña"
+                 [(ngModel)]="user.Password">
+        </div>
+
+      </div>
+
+    <div class="form-group row align-items-center">
+
+
+      <div class="col-md-2">
+
+      </div>
+      <div class="col-md-10">
+        <button class="btn btn-primary btn-block" type="submit">
+            <b>Ingresar</b>
         </button>
       </div>
-
 
     </div>
 
