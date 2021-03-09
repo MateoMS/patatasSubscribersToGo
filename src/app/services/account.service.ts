@@ -42,7 +42,7 @@ export class AccountService {
     localStorage.setItem('token', idToken);
 
     let today = new Date();
-    today.setSeconds( 3600 );  // una hora para que venza el token
+    today.setSeconds( 14400 );  // cuatro horas para que venza el token
 
     localStorage.setItem('expires', today.getTime().toString());
 

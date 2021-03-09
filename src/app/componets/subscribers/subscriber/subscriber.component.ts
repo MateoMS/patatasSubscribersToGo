@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -19,9 +19,9 @@ export class SubscriberComponent implements OnInit {
 
   subscriber = new Datum;
   countries = countryMap;
-  countryName: string;
-  countryPhone: string;
-  topics: Array<any>[];
+  countryName: string = '';
+  countryPhone: string = '';
+  topics: Array<any>[] = [];
   id: number;
   isNewSubscriber: boolean = false;
 
@@ -47,24 +47,29 @@ export class SubscriberComponent implements OnInit {
   }
 
   // Añadira los topicos para luego utilizarlos
-  // addTopics(thopic: any) {
-  //   this.topics.push(thopic.value);
-  //
-  //   console.log(this.topics);
-  // }
+  addTopics(thopic: any) {
+
+    this.topics.push(thopic.value);
+
+  }
+
+  changeTopic( i: number, val: any ) {
+
+    this.topics[i] = val.target.value;
+
+  }
 
   // Obtiene el nombre del país y el número de teléfono, los guarda y luego los
   // rescatara en la función donde se añadiran
   getCountryName(countryCode: string) {
     const country: Country | undefined = this.countries.find((c: Country) => c.code === countryCode);
     if (!country) {
-        console.log("No se encuentra codigo del pais");
+        return;
     }
 
     this.countryName = country.name;
     this.countryPhone = country.dialCode;
 
-    console.log(this.subscriber);
   }
 
   getSubscriber( id: number ) {
@@ -73,9 +78,12 @@ export class SubscriberComponent implements OnInit {
         (data: any) => {
           this.subscriber = data;
 
-          console.log(data);
+          if ( data['CountryCode'] != null ) {
+            this.getCountryName( data['CountryCode'] );
+          }
 
           this.topics = data['Topics'];
+          console.log(data);
           return data;
         }
     );
@@ -92,11 +100,31 @@ export class SubscriberComponent implements OnInit {
 
   // El submit con NgForm por medio de template
   updateSubscriber( formSubscriber: NgForm ) {
-    formSubscriber.value['Topics'] = [];
+
+    // En caso de que la informacion primordial no sea suministrada se avisara del error
+    if( formSubscriber.invalid ) {
+      Swal.fire({
+       icon: 'warning',
+       title: 'Formulario incompleto!!!',
+       text: 'Recuerde que es necesario el nombre del subscriptor, el correo electrónico o en caso de no tenerlo, el país y el número de celular.'
+     });
+     return;
+    }
+
+    formSubscriber.value['Topics'] = []; // lo inicializo vacio
+
+    if ( this.topics.length > 0 ) {
+      formSubscriber.value['Topics'] = [];
+      for ( let i=0; this.topics.length>i; i++ ) {
+        if ( this.topics[i].length > 0 ){
+          formSubscriber.value['Topics'].push(this.topics[i]);
+        }
+      }
+    }
 
     // Se recupera el codigo de telefono del pais y el nombre del pais segun lo que eligieran el select
     // si no se selecciono ningún país se saltara este paso
-    if ( this.countryName!==undefined && this.countryPhone!==undefined ) {
+    if ( this.countryName.length > 0 && this.countryPhone.length > 0 ) {
       formSubscriber.value['CountryName'] = this.countryName;
       formSubscriber.value['PhoneCode'] = this.countryPhone;
     }
@@ -122,14 +150,7 @@ export class SubscriberComponent implements OnInit {
 
       }
     }
-    else {
-      // En caso de que la informacion primordial no sea suministrada se avisara del error
-      Swal.fire({
-       icon: 'warning',
-       title: 'Formulario incompleto!!!',
-       text: 'Recuerde que es necesario el nombre del subscriptor, el correo electrónico o en caso de no tenerlo, el país y el número de celular.'
-     });
-    }
+
   }
 
   // Botón de eliminar con su respectiva confirmación
